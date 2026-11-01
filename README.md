@@ -17,3 +17,5 @@ and this README. Review changes, commit, and push to main.
 Keep relative asset paths so the viewer works under /season-10/.
 
 The Season 9 repository is separate and does not need to be changed.
+
+Keep the CoastalCraft home navigation when refreshing the generated index.html.
