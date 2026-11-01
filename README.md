@@ -2,11 +2,11 @@
 
 uNmINeD map export for CoastalCraft Season 10: The Mighty Mesa Reborn.
 
-Intended public address: https://coastal-craft.github.io/season-10/
+Intended public address: https://coastalcraft.github.io/season-10/
 
 ## Publishing
 
-Publish this folder as the root of the Coastal-Craft/season-10 repository.
+Publish this folder as the root of the CoastalCraft/season-10 repository.
 In repository Settings > Pages, select Deploy from a branch, then main and / (root).
 The .nojekyll file serves this generated export without Jekyll processing.
 
@@ -17,4 +17,3 @@ and this README. Review changes, commit, and push to main.
 Keep relative asset paths so the viewer works under /season-10/.
 
 The Season 9 repository is separate and does not need to be changed.
-
