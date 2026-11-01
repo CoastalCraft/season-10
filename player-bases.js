@@ -32,32 +32,23 @@ window.mountPlayerBases = function (viewer, config) {
         try { localStorage.setItem('coastal-season10-bases', toggle.checked ? 'shown' : 'hidden'); } catch {}
     });
 
-    function parseRow(row) {
-        if (!row || typeof row !== 'object' || Array.isArray(row)) return null;
-        const fields = Object.fromEntries(Object.entries(row).map(([key,value]) => [key.trim().toLowerCase(), value]));
-        const name = [fields.name, fields.player, fields.text1, fields.text].map(value => String(value ?? '').trim()).find(Boolean);
-        const rawX = String(fields.x ?? '').trim();
-        const rawZ = String(fields.z ?? '').trim();
-        if (!name || !rawX || !rawZ) return null;
-        const x = Number(rawX), z = Number(rawZ);
-        if (!Number.isFinite(x) || !Number.isFinite(z)) return null;
-        const color = /^#[0-9a-f]{6}$/i.test(String(fields.textcolor ?? '')) ? fields.textcolor : '#e06a3d';
-        return {name, x, z, color};
-    }
-
     function showBases(rows) {
-        bases = rows.map(parseRow).filter(Boolean);
-        const features = bases.map(base => {
+        const nextBases = rows.map(CoastalMarkerSheet.parse).filter(Boolean);
+        const features = nextBases.map(base => {
             const feature = new ol.Feature({
                 geometry: new ol.geom.Point(ol.proj.transform([base.x, base.z], viewer.dataProjection, viewer.viewProjection))
             });
             feature.set('base', base);
-            feature.setStyle(new ol.style.Style({
-                image: new ol.style.Circle({radius: 7, fill: new ol.style.Fill({color:base.color}), stroke: new ol.style.Stroke({color:'#fffef8',width:2})}),
-                text: new ol.style.Text({text:base.name,offsetY:-20,font:'600 13px system-ui',fill:new ol.style.Fill({color:'#fffef8'}),stroke:new ol.style.Stroke({color:'#173b35',width:4})})
-            }));
+            feature.set('entryid', base.entryid);
+            const style = new ol.style.Style({
+                image: base.image ? new ol.style.Icon({src:base.image,anchor:base.imageAnchor,scale:base.imageScale}) : undefined,
+                text: base.text ? new ol.style.Text({text:base.text,font:base.font,offsetX:base.offsetX,offsetY:base.offsetY,fill:new ol.style.Fill({color:base.textColor}),stroke:new ol.style.Stroke({color:base.strokeColor,width:2})}) : undefined
+            });
+            // Match OpenLayers minZoom semantics, independently for each row.
+            feature.setStyle(() => viewer.olMap.getView().getZoom() > base.minmapzoom ? style : undefined);
             return feature;
         });
+        bases = nextBases;
         layer.getSource().clear();
         layer.getSource().addFeatures(features);
         count.textContent = String(bases.length);
@@ -75,12 +66,19 @@ window.mountPlayerBases = function (viewer, config) {
                 toggle.checked = true;
                 toggle.dispatchEvent(new Event('change'));
                 viewer.center([base.x, base.z]);
+                const view = viewer.olMap.getView();
+                if (view.getZoom() <= base.minmapzoom) view.setZoom(Math.min(view.getMaxZoom(), Math.floor(base.minmapzoom) + 1));
             });
             item.append(button);
             list.append(item);
         }
         const skipped = rows.length - bases.length;
         status.textContent = bases.length ? `${bases.length} player ${bases.length === 1 ? 'base' : 'bases'} loaded.${skipped ? ` ${skipped} incomplete ${skipped === 1 ? 'row' : 'rows'} skipped.` : ''}` : 'No player bases have been added yet.';
+        // Canvas labels need to redraw once web fonts, including Font Awesome, arrive.
+        if (document.fonts) {
+            Promise.allSettled([...new Set(bases.filter(base => base.text).map(base => base.font))].map(font => Promise.resolve().then(() => document.fonts.load(font))))
+                .then(() => layer.changed());
+        }
     }
 
     async function load() {

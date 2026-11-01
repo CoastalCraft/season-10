@@ -32,5 +32,20 @@ color. Markers use labeled circles; Font Awesome glyphs and image fields are not
 required. Select a list entry to center the map, toggle visibility, or press
 Refresh to reload the sheet (the public feed may briefly cache changes).
 
-When regenerating, retain player-bases.config.js, player-bases.js, player-bases.css,
+When regenerating, retain player-bases.config.js, player-bases.js, player-bases.css, marker-sheet.js,
 and the panel, script/style imports, and mountPlayerBases call in index.html.
+
+### Season 9 spreadsheet compatibility
+
+text1/text2/text3 are decoded (including literal Unicode escapes for Font Awesome)
+and joined with newlines. font, textColor, strokeColor (2px outline), offsetX and
+offsetY style the text. image, imageAnchor ([x,y] or x,y), and imageScale style an
+optional image. entryid is retained as marker metadata. Blank numeric style
+fields use defaults; incomplete or invalid coordinate rows are skipped.
+
+minmapzoom is the minimum **OpenLayers view zoom**, matching Season 9's units,
+not the -3..3 tile-folder numbers. Each marker is visible strictly above its own
+threshold. Sidebar selection zooms in when needed, up to the map's maximum zoom.
+Unlike Season 9, the last row no longer controls the entire layer's visibility.
+Font Awesome 6.2.1 is loaded for the existing Free-font icon codes. Image URLs
+may be relative to the map or use HTTP(S). Rows can be text-only or image-only.
