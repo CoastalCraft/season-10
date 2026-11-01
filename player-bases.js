@@ -1,6 +1,21 @@
 // Separate from the generated uNmINeD viewer so map exports do not replace it.
 window.mountPlayerBases = function (viewer, config) {
     const panel = document.getElementById('player-bases');
+    const collapse = document.getElementById('bases-collapse');
+    const content = document.getElementById('bases-content');
+    const chevron = document.getElementById('bases-chevron');
+    function setCollapsed(collapsed) {
+        content.hidden = collapsed;
+        panel.classList.toggle('is-collapsed', collapsed);
+        collapse.setAttribute('aria-expanded', String(!collapsed));
+        chevron.textContent = collapsed ? '+' : '−';
+    }
+    try { setCollapsed(localStorage.getItem('coastal-season10-panel') === 'collapsed'); } catch {}
+    collapse.addEventListener('click', () => {
+        const collapsed = !content.hidden;
+        setCollapsed(collapsed);
+        try { localStorage.setItem('coastal-season10-panel', collapsed ? 'collapsed' : 'expanded'); } catch {}
+    });
     const toggle = document.getElementById('bases-toggle');
     const refresh = document.getElementById('bases-refresh');
     const status = document.getElementById('bases-status');

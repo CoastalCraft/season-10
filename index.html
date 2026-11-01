@@ -42,6 +42,8 @@
     <nav aria-label="Map navigation" style="position:fixed;top:12px;left:64px;z-index:10;display:flex;gap:16px;padding:9px 14px;border-radius:5px;background:#f6f4eb;color:#173b35;font:13px system-ui;box-shadow:0 2px 10px #0003"><a href="/" style="color:inherit">← CoastalCraft</a><span>Season 10</span></nav>
     <div id="map"></div>
     <aside id="player-bases" class="bases-panel" aria-label="Player bases layer">
+        <button type="button" id="bases-collapse" class="bases-collapse" aria-expanded="true" aria-controls="bases-content">Player bases <span id="bases-chevron" aria-hidden="true">−</span></button>
+        <div id="bases-content">
         <div class="bases-heading">
             <label><input type="checkbox" id="bases-toggle" checked> Player bases (<span id="bases-count">0</span>)</label>
             <button type="button" id="bases-refresh" class="bases-refresh">Refresh</button>
@@ -49,6 +51,7 @@
         <p id="bases-status" class="bases-status" role="status" aria-live="polite">Loading player bases…</p>
         <ul id="bases-list" class="bases-list" aria-label="Find a player base"></ul>
         <p class="bases-help">Select a base to center the map. Coordinates are X, Z.</p>
+        </div>
     </aside>
 
     <script type="text/javascript">
