@@ -24,10 +24,11 @@ window.mountPlayerBases = function (viewer, config) {
     let bases = [];
     const layer = new ol.layer.Vector({source: new ol.source.Vector(), zIndex: 20});
     const radiusLayer = new ol.layer.Vector({source:new ol.source.Vector(),zIndex:8});
-    radiusLayer.set('title','Player base radii');
+    radiusLayer.set('title','Build radii');
     viewer.olMap.addLayer(radiusLayer);
     const selectedRadii = new Set();
     const radiusKey = base => base.entryid || `${base.x},${base.z}:${base.name}`;
+    const supportsRadius = base => ['Player Bases','Community'].includes(base.category);
     layer.set('title', 'Markers');
     viewer.olMap.addLayer(layer);
     try { toggle.checked = localStorage.getItem('coastal-season10-bases') !== 'hidden'; } catch {}
@@ -59,7 +60,7 @@ window.mountPlayerBases = function (viewer, config) {
         layer.getSource().clear();
         layer.getSource().addFeatures(features);
         radiusLayer.getSource().clear();
-        const validKeys = new Set(bases.filter(base => base.category === 'Player Bases' && base.radius > 0).map(radiusKey));
+        const validKeys = new Set(bases.filter(base => supportsRadius(base) && base.radius > 0).map(radiusKey));
         for (const key of selectedRadii) if (!validKeys.has(key)) selectedRadii.delete(key);
         count.textContent = String(bases.length);
         list.replaceChildren();
@@ -101,7 +102,7 @@ window.mountPlayerBases = function (viewer, config) {
                 if (view.getZoom() <= base.minmapzoom) view.setZoom(Math.min(view.getMaxZoom(), Math.floor(base.minmapzoom) + 1));
             });
             item.append(button);
-            if (base.category === 'Player Bases') {
+            if (supportsRadius(base)) {
                 const radiusLabel = document.createElement('label');
                 radiusLabel.className = 'base-radius';
                 const radiusToggle = document.createElement('input');
