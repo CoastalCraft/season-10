@@ -54,7 +54,7 @@ window.mountPlayerBases = function (viewer, config) {
         count.textContent = String(bases.length);
         list.replaceChildren();
         const groups = new Map();
-        for (const category of ['Community', 'Player Bases']) {
+        for (const category of ['Player Bases', 'Shops', 'Portals', 'Community']) {
             const group = document.createElement('details');
             group.className = 'marker-group';
             group.open = true;

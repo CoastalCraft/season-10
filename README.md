@@ -51,3 +51,5 @@ Font Awesome 6.2.1 is loaded for the existing Free-font icon codes. Image URLs
 may be relative to the map or use HTTP(S). Rows can be text-only or image-only.
 
 The sidebar is named Markers. Overworld column O (category) has a dropdown with Community and Player Bases. The portal, ships and community tree farm are Community. Blank categories default to Player Bases. Groups can be expanded or collapsed independently.
+
+Marker categories now support Player Bases, Shops, Portals, and Community. Spawn Portal is Portals; ships and the tree farm are Community. Captain should map base/shop/portal/community to these exact category labels.
