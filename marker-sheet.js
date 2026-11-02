@@ -38,7 +38,7 @@ window.CoastalMarkerSheet = (() => {
         if (!lines.length && !image) return null;
         return {
             entryid: String(f.entryid ?? ''), x, z,
-            name: decode(first) || `Marker ${f.entryid || `${x}, ${z}`}`,
+            name: lines.filter(line => /[\p{L}\p{N}]/u.test(line)).join(' ') || `Marker ${f.entryid || `${x}, ${z}`}`,
             text: lines.join('\n'), image,
             imageAnchor: anchor(f.imageanchor), imageScale: Math.max(0, number(f.imagescale, 1)),
             minmapzoom: number(f.minmapzoom, -Infinity),
