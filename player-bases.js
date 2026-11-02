@@ -102,15 +102,14 @@ window.mountPlayerBases = function (viewer, config) {
                 if (view.getZoom() <= base.minmapzoom) view.setZoom(Math.min(view.getMaxZoom(), Math.floor(base.minmapzoom) + 1));
             });
             item.append(button);
-            if (supportsRadius(base)) {
+            if (supportsRadius(base) && base.radius > 0) {
                 const radiusLabel = document.createElement('label');
                 radiusLabel.className = 'base-radius';
                 const radiusToggle = document.createElement('input');
                 radiusToggle.type = 'checkbox';
-                radiusToggle.disabled = base.radius <= 0;
                 radiusToggle.checked = selectedRadii.has(radiusKey(base));
                 radiusToggle.setAttribute('aria-label', `Show ${base.name} radius`);
-                radiusLabel.append(radiusToggle, document.createTextNode(base.radius > 0 ? `Show ${base.radius}-block radius` : 'Radius not set'));
+                radiusLabel.append(radiusToggle, document.createTextNode(`Show ${base.radius}-block radius`));
                 item.append(radiusLabel);
                 if (base.radius > 0) {
                     const center = ol.proj.transform([base.x,base.z],viewer.dataProjection,viewer.viewProjection);
