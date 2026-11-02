@@ -23,12 +23,19 @@ window.mountPlayerBases = function (viewer, config) {
     const list = document.getElementById('bases-list');
     let bases = [];
     const layer = new ol.layer.Vector({source: new ol.source.Vector(), zIndex: 20});
+    const radiusLayer = new ol.layer.Vector({source:new ol.source.Vector(),zIndex:8});
+    radiusLayer.set('title','Player base radii');
+    viewer.olMap.addLayer(radiusLayer);
+    const selectedRadii = new Set();
+    const radiusKey = base => base.entryid || `${base.x},${base.z}:${base.name}`;
     layer.set('title', 'Markers');
     viewer.olMap.addLayer(layer);
     try { toggle.checked = localStorage.getItem('coastal-season10-bases') !== 'hidden'; } catch {}
     layer.setVisible(toggle.checked);
+    radiusLayer.setVisible(toggle.checked);
     toggle.addEventListener('change', () => {
         layer.setVisible(toggle.checked);
+        radiusLayer.setVisible(toggle.checked);
         try { localStorage.setItem('coastal-season10-bases', toggle.checked ? 'shown' : 'hidden'); } catch {}
     });
 
@@ -51,6 +58,9 @@ window.mountPlayerBases = function (viewer, config) {
         bases = nextBases;
         layer.getSource().clear();
         layer.getSource().addFeatures(features);
+        radiusLayer.getSource().clear();
+        const validKeys = new Set(bases.filter(base => base.category === 'Player Bases' && base.radius > 0).map(radiusKey));
+        for (const key of selectedRadii) if (!validKeys.has(key)) selectedRadii.delete(key);
         count.textContent = String(bases.length);
         list.replaceChildren();
         const groups = new Map();
@@ -91,6 +101,41 @@ window.mountPlayerBases = function (viewer, config) {
                 if (view.getZoom() <= base.minmapzoom) view.setZoom(Math.min(view.getMaxZoom(), Math.floor(base.minmapzoom) + 1));
             });
             item.append(button);
+            if (base.category === 'Player Bases') {
+                const radiusLabel = document.createElement('label');
+                radiusLabel.className = 'base-radius';
+                const radiusToggle = document.createElement('input');
+                radiusToggle.type = 'checkbox';
+                radiusToggle.disabled = base.radius <= 0;
+                radiusToggle.checked = selectedRadii.has(radiusKey(base));
+                radiusToggle.setAttribute('aria-label', `Show ${base.name} radius`);
+                radiusLabel.append(radiusToggle, document.createTextNode(base.radius > 0 ? `Show ${base.radius}-block radius` : 'Radius not set'));
+                item.append(radiusLabel);
+                if (base.radius > 0) {
+                    const center = ol.proj.transform([base.x,base.z],viewer.dataProjection,viewer.viewProjection);
+                    const edge = ol.proj.transform([base.x+base.radius,base.z],viewer.dataProjection,viewer.viewProjection);
+                    const circle = new ol.Feature({geometry:new ol.geom.Circle(center,Math.hypot(edge[0]-center[0],edge[1]-center[1]))});
+                    circle.set('base',base);
+                    const fillColor = ol.color.asArray(base.textColor).slice();
+                    fillColor[3] = 0.06;
+                    circle.setStyle([
+                        new ol.style.Style({stroke:new ol.style.Stroke({color:'rgba(255,255,255,0.65)',width:5})}),
+                        new ol.style.Style({stroke:new ol.style.Stroke({color:base.textColor,width:3}),fill:new ol.style.Fill({color:fillColor})})
+                    ]);
+                    if (radiusToggle.checked) radiusLayer.getSource().addFeature(circle);
+                    radiusToggle.addEventListener('change',()=>{
+                        if (radiusToggle.checked) {
+                            selectedRadii.add(radiusKey(base));
+                            radiusLayer.getSource().addFeature(circle);
+                            toggle.checked = true;
+                            toggle.dispatchEvent(new Event('change'));
+                        } else {
+                            selectedRadii.delete(radiusKey(base));
+                            radiusLayer.getSource().removeFeature(circle);
+                        }
+                    });
+                }
+            }
             groups.get(base.category).append(item);
         }
         const skipped = rows.length - bases.length;
@@ -122,5 +167,5 @@ window.mountPlayerBases = function (viewer, config) {
     }
     refresh.addEventListener('click', load);
     load();
-    return {layer, reload:load};
+    return {layer, radiusLayer, reload:load};
 };

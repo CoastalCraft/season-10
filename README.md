@@ -55,3 +55,5 @@ The sidebar is named Markers. Overworld column O (category) has a dropdown with 
 Marker categories now support Player Bases, Shops, Portals, and Community. Spawn Portal is Portals; ships and the tree farm are Community. Captain should map base/shop/portal/community to these exact category labels.
 
 Spawn Town is a separate OpenLayers circle centered on X=0, Z=0 with a 500-block radius (1,000-block diameter). spawn-town.js transforms block coordinates to the viewer projection. Its gold dashed outline and label can be toggled independently in the Markers sidebar. Preserve its script import, mount call and checkbox on map regeneration.
+
+Player Bases read radius (column P) in Minecraft blocks. A positive finite radius enables a per-base Show radius checkbox; blank, zero, invalid and negative values leave it disabled. Circles are centered on the marker X/Z and use textColor, with a light outline for contrast. Choices stay selected across Refresh, updating geometry/color from the sheet. Show markers hides circles too; Spawn Town stays independently controlled. Radius selections default off on page load. No default radius is assigned.
