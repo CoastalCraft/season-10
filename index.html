@@ -32,27 +32,27 @@
     <script type="text/javascript" src="unmined.js"></script>
     <link rel="stylesheet" type="text/css" href="index.css">
         
-    <link rel="stylesheet" href="player-bases.css">
+    <link rel="stylesheet" href="player-bases.css?v=20261101-groups">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <script src="player-bases.config.js"></script>
-    <script src="marker-sheet.js?v=20261101-labels"></script>
-    <script src="player-bases.js?v=20261101-fields"></script>
+    <script src="marker-sheet.js?v=20261101-groups"></script>
+    <script src="player-bases.js?v=20261101-groups"></script>
 
 </head>
 
 <body>
     <nav aria-label="Map navigation" style="position:fixed;top:12px;left:64px;z-index:10;display:flex;gap:16px;padding:9px 14px;border-radius:5px;background:#f6f4eb;color:#173b35;font:13px system-ui;box-shadow:0 2px 10px #0003"><a href="/" style="color:inherit">← CoastalCraft</a><span>Season 10</span></nav>
     <div id="map"></div>
-    <aside id="player-bases" class="bases-panel" aria-label="Player bases layer">
-        <button type="button" id="bases-collapse" class="bases-collapse" aria-expanded="true" aria-controls="bases-content">Player bases <span id="bases-chevron" aria-hidden="true">−</span></button>
+    <aside id="player-bases" class="bases-panel" aria-label="Markers layer">
+        <button type="button" id="bases-collapse" class="bases-collapse" aria-expanded="true" aria-controls="bases-content">Markers <span id="bases-chevron" aria-hidden="true">−</span></button>
         <div id="bases-content">
         <div class="bases-heading">
-            <label><input type="checkbox" id="bases-toggle" checked> Player bases (<span id="bases-count">0</span>)</label>
+            <label><input type="checkbox" id="bases-toggle" checked> Show markers (<span id="bases-count">0</span>)</label>
             <button type="button" id="bases-refresh" class="bases-refresh">Refresh</button>
         </div>
-        <p id="bases-status" class="bases-status" role="status" aria-live="polite">Loading player bases…</p>
-        <ul id="bases-list" class="bases-list" aria-label="Find a player base"></ul>
-        <p class="bases-help">Select a base to center the map. Coordinates are X, Z.</p>
+        <p id="bases-status" class="bases-status" role="status" aria-live="polite">Loading markers…</p>
+        <div id="bases-list" class="marker-groups" aria-label="Marker groups"></div>
+        <p class="bases-help">Select a marker to center the map. Coordinates are X, Z.</p>
         </div>
     </aside>
 

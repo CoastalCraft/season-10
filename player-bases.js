@@ -23,7 +23,7 @@ window.mountPlayerBases = function (viewer, config) {
     const list = document.getElementById('bases-list');
     let bases = [];
     const layer = new ol.layer.Vector({source: new ol.source.Vector(), zIndex: 20});
-    layer.set('title', 'Player bases');
+    layer.set('title', 'Markers');
     viewer.olMap.addLayer(layer);
     try { toggle.checked = localStorage.getItem('coastal-season10-bases') !== 'hidden'; } catch {}
     layer.setVisible(toggle.checked);
@@ -53,6 +53,27 @@ window.mountPlayerBases = function (viewer, config) {
         layer.getSource().addFeatures(features);
         count.textContent = String(bases.length);
         list.replaceChildren();
+        const groups = new Map();
+        for (const category of ['Community', 'Player Bases']) {
+            const group = document.createElement('details');
+            group.className = 'marker-group';
+            group.open = true;
+            const summary = document.createElement('summary');
+            const members = bases.filter(base => base.category === category);
+            summary.textContent = `${category} (${members.length})`;
+            const items = document.createElement('ul');
+            items.className = 'bases-list';
+            items.setAttribute('aria-label', category);
+            group.append(summary, items);
+            if (!members.length) {
+                const empty = document.createElement('p');
+                empty.className = 'bases-help';
+                empty.textContent = 'No markers in this group yet.';
+                group.append(empty);
+            }
+            list.append(group);
+            groups.set(category, items);
+        }
         for (const base of bases) {
             const item = document.createElement('li');
             const button = document.createElement('button');
@@ -70,10 +91,10 @@ window.mountPlayerBases = function (viewer, config) {
                 if (view.getZoom() <= base.minmapzoom) view.setZoom(Math.min(view.getMaxZoom(), Math.floor(base.minmapzoom) + 1));
             });
             item.append(button);
-            list.append(item);
+            groups.get(base.category).append(item);
         }
         const skipped = rows.length - bases.length;
-        status.textContent = bases.length ? `${bases.length} player ${bases.length === 1 ? 'base' : 'bases'} loaded.${skipped ? ` ${skipped} incomplete ${skipped === 1 ? 'row' : 'rows'} skipped.` : ''}` : 'No player bases have been added yet.';
+        status.textContent = bases.length ? `${bases.length} ${bases.length === 1 ? 'marker' : 'markers'} loaded.${skipped ? ` ${skipped} incomplete ${skipped === 1 ? 'row' : 'rows'} skipped.` : ''}` : 'No markers have been added yet.';
         // Canvas labels need to redraw once web fonts, including Font Awesome, arrive.
         if (document.fonts) {
             Promise.allSettled([...new Set(bases.filter(base => base.text).map(base => base.font))].map(font => Promise.resolve().then(() => document.fonts.load(font))))
@@ -83,12 +104,12 @@ window.mountPlayerBases = function (viewer, config) {
 
     async function load() {
         if (!config?.sheetId || !config?.tab) {
-            status.textContent = 'Player bases are not available yet.';
+            status.textContent = 'Markers are not available yet.';
             refresh.disabled = true;
             return;
         }
         refresh.disabled = true;
-        status.textContent = 'Loading player bases…';
+        status.textContent = 'Loading markers…';
         try {
             const response = await fetch(`https://opensheet.elk.sh/${encodeURIComponent(config.sheetId)}/${encodeURIComponent(config.tab)}`, {cache:'no-store',signal:AbortSignal.timeout(15000)});
             if (!response.ok) throw new Error('Unable to load player bases');
@@ -96,7 +117,7 @@ window.mountPlayerBases = function (viewer, config) {
             if (!Array.isArray(rows)) throw new Error('Invalid player base data');
             showBases(rows);
         } catch {
-            status.textContent = bases.length ? 'Could not refresh. Showing previously loaded bases; try again.' : 'Could not load player bases. Please try Refresh.';
+            status.textContent = bases.length ? 'Could not refresh. Showing previously loaded markers; try again.' : 'Could not load markers. Please try Refresh.';
         } finally { refresh.disabled = false; }
     }
     refresh.addEventListener('click', load);

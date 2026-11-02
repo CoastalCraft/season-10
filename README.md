@@ -49,3 +49,5 @@ threshold. Sidebar selection zooms in when needed, up to the map's maximum zoom.
 Unlike Season 9, the last row no longer controls the entire layer's visibility.
 Font Awesome 6.2.1 is loaded for the existing Free-font icon codes. Image URLs
 may be relative to the map or use HTTP(S). Rows can be text-only or image-only.
+
+The sidebar is named Markers. Overworld column O (category) has a dropdown with Community and Player Bases. The portal, ships and community tree farm are Community. Blank categories default to Player Bases. Groups can be expanded or collapsed independently.
