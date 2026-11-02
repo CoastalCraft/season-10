@@ -37,6 +37,7 @@
     <script src="player-bases.config.js"></script>
     <script src="marker-sheet.js?v=20261101-four-groups"></script>
     <script src="player-bases.js?v=20261101-four-groups"></script>
+    <script src="spawn-town.js"></script>
 
 </head>
 
@@ -51,6 +52,7 @@
             <button type="button" id="bases-refresh" class="bases-refresh">Refresh</button>
         </div>
         <p id="bases-status" class="bases-status" role="status" aria-live="polite">Loading markers…</p>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:10px"><input type="checkbox" id="spawn-town-toggle" checked style="accent-color:#174f42"> Spawn Town · 500 blocks</label>
         <div id="bases-list" class="marker-groups" aria-label="Marker groups"></div>
         <p class="bases-help">Select a marker to center the map. Coordinates are X, Z.</p>
         </div>
@@ -71,6 +73,7 @@
         const mapElement = document.getElementById('map');
         const unmined = new Unmined(mapElement, UnminedMapProperties, UnminedRegions);
         const playerBases = mountPlayerBases(unmined, window.CoastalPlayerBases);
+        const spawnTown = mountSpawnTown(unmined);
 
 
     </script>
