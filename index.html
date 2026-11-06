@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>uNmINeD</title>
@@ -32,6 +32,7 @@
     <script type="text/javascript" src="unmined.js"></script>
     <link rel="stylesheet" type="text/css" href="index.css">
         
+    <link rel="stylesheet" href="map-navigation.css?v=20261106">
     <link rel="stylesheet" href="player-bases.css?v=20261102-positive-radii">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <script src="player-bases.config.js"></script>
@@ -42,7 +43,7 @@
 </head>
 
 <body>
-    <nav aria-label="Map navigation" style="position:fixed;top:12px;left:64px;z-index:10;display:flex;gap:16px;padding:9px 14px;border-radius:5px;background:#f6f4eb;color:#173b35;font:13px system-ui;box-shadow:0 2px 10px #0003"><a href="/" style="color:inherit">← CoastalCraft</a><span>Season 10</span></nav>
+    <nav class="map-navigation" aria-label="Map navigation"><a href="/">← CoastalCraft</a><span>Season 10</span><div class="map-dimensions" role="group" aria-label="Dimension"><a href="/season-10/" aria-current="page">Overworld</a><a href="/season-10/nether/">Nether</a></div></nav>
     <div id="map"></div>
     <aside id="player-bases" class="bases-panel" aria-label="Markers layer">
         <button type="button" id="bases-collapse" class="bases-collapse" aria-expanded="true" aria-controls="bases-content">Markers <span id="bases-chevron" aria-hidden="true">−</span></button>
@@ -60,7 +61,7 @@
 
     <script type="text/javascript">
 
-        document.title = UnminedMapProperties.worldName + " - " + document.title;
+        document.title = UnminedMapProperties.worldName + " - Season 10 Overworld";
 
         if (UnminedCustomMarkers && UnminedCustomMarkers.isEnabled && UnminedCustomMarkers.markers) {
             UnminedMapProperties.markers = UnminedMapProperties.markers.concat(UnminedCustomMarkers.markers);

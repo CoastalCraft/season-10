@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>uNmINeD</title>
@@ -32,16 +32,34 @@
     <script type="text/javascript" src="unmined.js"></script>
     <link rel="stylesheet" type="text/css" href="index.css">
         
-    </style>
+    <link rel="stylesheet" href="../map-navigation.css?v=20261106">
+    <link rel="stylesheet" href="../player-bases.css?v=20261102-positive-radii">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="../player-bases.config.js"></script>
+    <script src="../marker-sheet.js?v=20261102-positive-radii"></script>
+    <script src="../player-bases.js?v=20261102-positive-radii"></script>
 
 </head>
 
 <body>
+    <nav class="map-navigation" aria-label="Map navigation"><a href="/">← CoastalCraft</a><span>Season 10</span><div class="map-dimensions" role="group" aria-label="Dimension"><a href="/season-10/">Overworld</a><a href="/season-10/nether/" aria-current="page">Nether</a></div></nav>
     <div id="map"></div>
+    <aside id="player-bases" class="bases-panel" aria-label="Markers layer">
+        <button type="button" id="bases-collapse" class="bases-collapse" aria-expanded="true" aria-controls="bases-content">Markers <span id="bases-chevron" aria-hidden="true">−</span></button>
+        <div id="bases-content">
+        <div class="bases-heading">
+            <label><input type="checkbox" id="bases-toggle" checked> Show markers (<span id="bases-count">0</span>)</label>
+            <button type="button" id="bases-refresh" class="bases-refresh">Refresh</button>
+        </div>
+        <p id="bases-status" class="bases-status" role="status" aria-live="polite">Loading markers…</p>
+        <div id="bases-list" class="marker-groups" aria-label="Marker groups"></div>
+        <p class="bases-help">Select a marker to center the map. Coordinates are X, Z.</p>
+        </div>
+    </aside>
 
     <script type="text/javascript">
 
-        document.title = UnminedMapProperties.worldName + " - " + document.title;
+        document.title = UnminedMapProperties.worldName + " - Season 10 Nether";
 
         if (UnminedCustomMarkers && UnminedCustomMarkers.isEnabled && UnminedCustomMarkers.markers) {
             UnminedMapProperties.markers = UnminedMapProperties.markers.concat(UnminedCustomMarkers.markers);
@@ -53,6 +71,8 @@
 
         const mapElement = document.getElementById('map');
         const unmined = new Unmined(mapElement, UnminedMapProperties, UnminedRegions);
+        const playerBases = mountPlayerBases(unmined, { ...window.CoastalPlayerBases, tab: "Nether" });
+
 
 
     </script>

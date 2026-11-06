@@ -59,3 +59,15 @@ Spawn Town is a separate OpenLayers circle centered on X=0, Z=0 with a 500-block
 Player Bases read radius (column P) in Minecraft blocks. A positive finite radius enables a per-base Show radius checkbox; blank, zero, invalid and negative values leave it disabled. Circles are centered on the marker X/Z and use textColor, with a light outline for contrast. Choices stay selected across Refresh, updating geometry/color from the sheet. Show markers hides circles too; Spawn Town stays independently controlled. Radius selections default off on page load. No default radius is assigned.
 
 Community builds now support the same per-marker radius checkbox as Player Bases. Shops and Portals do not show radius controls. All circles read the shared radius column P and use their marker textColor.
+
+## Dimension navigation
+
+Overworld: https://coastalcraft.github.io/season-10/
+Nether: https://coastalcraft.github.io/season-10/nether/
+
+Both viewers have Overworld/Nether links styled by map-navigation.css. The Nether
+viewer uses its own local exported tiles, properties, players, and regions. It
+reuses the parent marker renderer and reads the Nether tab of the same sheet.
+Spawn Town is an Overworld-only overlay; no Overworld marker coordinates are
+copied into the Nether. Keep the navigation and shared ../ asset imports when
+refreshing nether/index.html after future exports.
