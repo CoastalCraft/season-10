@@ -8,7 +8,7 @@ var UnminedMapProperties = {
     minRegionZ: -23,
     maxRegionX: 6,
     maxRegionZ: 9,
-    worldName: "The Mighty Mesa Reborn - 11-2",
+    worldName: "The Mighty Mesa Reborn - 1105",
     background: "#000000",
     markers: new Array(),
     enableGrid: true,
